@@ -2,7 +2,7 @@
 
 View your listening achievements, levels, and statistics.
 
-![preview](https://raw.githubusercontent.com/louloudev59/spotify-achievements/main/preview.png)
+![preview](https://raw.githubusercontent.com/louloudev59/spotify-achievements/refs/heads/main/main/docs/main.png)
 
 > **Note**  
 > Spotify Achievements tracks your local listening history and level progression in real-time.
@@ -18,52 +18,48 @@ View your listening achievements, levels, and statistics.
 -   **Clean Vector Design**: Modern SVG icons styled to look like Spotify's native user interface.
 -   **Multi-language**: Choice of display language (English / French) on first launch.
 
-![preview](https://raw.githubusercontent.com/louloudev59/spotify-achievements/main/docs/main2.png)
-![preview](https://raw.githubusercontent.com/louloudev59/spotify-achievements/main/docs/stats.png)
+![preview](https://raw.githubusercontent.com/louloudev59/spotify-achievements/refs/heads/main/main/docs/main2.png)
+![preview](https://raw.githubusercontent.com/louloudev59/spotify-achievements/refs/heads/main/main/docs/stats.png)
 
 ## Manual Installation
 
-1. Run `spicetify config-dir` to open the spicetify folder.
-2. Go to the `CustomApps` folder.
-3. Create a `spotify-achievements` folder.
-4. Download the custom app files and place the compiled files (`index.js`, `manifest.json`, `style.css`) inside the folder you created in step 3.
-5. Copy the extension file `spotify-achievements.js` into the `Extensions` folder of Spicetify.
+1. Run `spicetify config-dir` to open the Spicetify directory.
+2. Navigate to the `CustomApps` folder.
+3. Create a new folder named `spotify-achievements`.
+4. Copy the compiled custom app files (`index.js`, `manifest.json`, `style.css`, `extension.js`) into this new folder.
 
-Then, run the following commands:
+Then, register the custom app and apply Spicetify:
 
 ```sh
-spicetify config custom_apps spotify-achievements extensions spotify-achievements.js
+spicetify config custom_apps spotify-achievements
 spicetify apply
 ```
 
-## stats.fm Integration
+## Publishing to Spicetify Marketplace
 
-If you use the **listening-stats** app connected to stats.fm on Spicetify, Spotify Achievements will automatically detect your stats.fm username from local storage.
+To make this app available on the Spicetify Marketplace, follow these steps:
 
-To synchronize your lifetime statistics:
-1. Open the **Achievements** custom app.
-2. Go to the **Settings** tab.
-3. Click the **Force synchronization** button.
+### 1. Add GitHub Topics Tag
+Go to your GitHub repository settings and add the following topic tag to the repository:
+*   `spicetify-apps`
 
-The custom app will query the stats.fm API to fetch your lifetime listening duration, play count, top artists, and associated genres, immediately updating your XP and achievements!
+### 2. Build and Deploy compiled files
+Your repository's `main` branch contains the source code, but the Marketplace expects the compiled files to be located in the root of a branch. Run the built-in deployment script to automatically build, package, and push the assets to the `dist` branch:
 
-![preview](https://raw.githubusercontent.com/louloudev59/spotify-achievements/main/docs/settings.png)
+```sh
+npm run publish-dist
+```
 
-## Upcoming features
-
--   More custom achievements (e.g. specific release eras, artist marathons)
--   Interactive levels dashboard with achievements progression graphs
--   Sound effects theme selector (retro, native, fantasy)
+The Marketplace will read the `manifest.json` on your default branch, detect `"branch": "dist"`, and download the compiled files from the `dist` branch automatically!
 
 ## Uninstall
 
-1. Run `spicetify config-dir` to open the spicetify folder
-2. Go to the `CustomApps` folder and delete the `spotify-achievements` folder
-3. Go to the `Extensions` folder and delete the `spotify-achievements.js` file
+1. Run `spicetify config-dir` to open the Spicetify folder.
+2. Go to the `CustomApps` folder and delete the `spotify-achievements` folder.
 
-Then, run the following commands:
+Then, remove the app configuration and apply:
 
 ```sh
-spicetify config custom_apps spotify-achievements- extensions spotify-achievements.js-
+spicetify config custom_apps spotify-achievements-
 spicetify apply
 ```

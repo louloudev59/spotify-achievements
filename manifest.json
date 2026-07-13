@@ -1,0 +1,19 @@
+{
+  "name": "Spotify Achievements",
+  "description": "Unlock achievements, track stats, level up, and earn XP based on your Spotify listening habits.",
+  "preview": "preview.png",
+  "readme": "README.md",
+  "branch": "dist",
+  "authors": [
+    {
+      "name": "louloudev59",
+      "url": "https://github.com/louloudev59"
+    }
+  ],
+  "tags": [
+    "achievements",
+    "statistics",
+    "gamification",
+    "stats"
+  ]
+}
