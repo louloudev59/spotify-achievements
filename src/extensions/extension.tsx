@@ -9,6 +9,8 @@ import {
   syncUserLibraryStats,
 } from "../logic/achievementEngine";
 import { getLocalizedAchievement } from "../logic/conditions";
+import { loadState } from "../logic/storage";
+import { playAchievementSound } from "../logic/sound";
 
 function showAchievementToast(name: string, xp: number, rarity: string) {
   try {
@@ -71,6 +73,26 @@ function showAchievementToast(name: string, xp: number, rarity: string) {
     const localized = getLocalizedAchievement(achievement, lang);
     showAchievementToast(localized.name, xpEarned, localized.rarity);
   });
+
+  (window as any).__simulateAchievementUnlock = () => {
+    try {
+      const state = loadState();
+      const lang = localStorage.getItem("spotify-achievements:language") || "fr";
+      const isEn = lang === "en";
+      
+      const name = isEn ? "Simulated Achievement" : "Succès Simulé";
+      const xp = 250;
+      const rarity = "epic";
+      
+      if (state.settings.soundEnabled) {
+        playAchievementSound(rarity);
+      }
+      
+      showAchievementToast(name, xp, rarity);
+    } catch (e) {
+      console.error("Simulation error:", e);
+    }
+  };
 
   let lastTrackUri = "";
   let trackCompleted = false;

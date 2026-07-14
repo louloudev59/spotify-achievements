@@ -72,6 +72,9 @@ const TRANSLATIONS = {
     diagGenerated: "Généré",
     diagErrorLogs: "LOGS D'ERREURS RECENTS",
     diagPlatformInspection: "PLATFORM INSPECTION",
+    simulateTitle: "Tester les notifications",
+    simulateDesc: "Déclencher un toast et un son de succès factice",
+    simulateBtn: "Simuler un succès",
   },
   en: {
     welcome: "Welcome to Spotify Achievements",
@@ -122,6 +125,9 @@ const TRANSLATIONS = {
     diagGenerated: "Generated",
     diagErrorLogs: "RECENT ERROR LOGS",
     diagPlatformInspection: "PLATFORM INSPECTION",
+    simulateTitle: "Test notifications",
+    simulateDesc: "Trigger a dummy achievement unlock toast and sound",
+    simulateBtn: "Simulate unlock",
   }
 };
 
@@ -561,6 +567,37 @@ export function SidebarPage() {
                   <option value="fr" style={{ background: "#181818" }}>Français</option>
                   <option value="en" style={{ background: "#181818" }}>English</option>
                 </select>
+              </div>
+
+              <div className="setting-toggle-row">
+                <div className="setting-info">
+                  <div className="setting-name">{t.simulateTitle}</div>
+                  <div className="setting-desc">{t.simulateDesc}</div>
+                </div>
+                <button
+                  className="data-btn"
+                  onClick={() => {
+                    if (typeof (window as any).__simulateAchievementUnlock === "function") {
+                      (window as any).__simulateAchievementUnlock();
+                    } else {
+                      alert(language === "en" ? "Simulation service not ready yet. Please restart Spotify." : "Service de simulation non prêt. Veuillez redémarrer Spotify.");
+                    }
+                  }}
+                  style={{
+                    background: "rgba(255, 255, 255, 0.08)",
+                    border: "1px solid rgba(255, 255, 255, 0.12)",
+                    borderRadius: "8px",
+                    color: "#fff",
+                    padding: "6px 16px",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                    transition: "background 0.2s"
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255, 255, 255, 0.15)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255, 255, 255, 0.08)"; }}
+                >
+                  {t.simulateBtn}
+                </button>
               </div>
             </div>
 

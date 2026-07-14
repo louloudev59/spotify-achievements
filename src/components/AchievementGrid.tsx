@@ -97,8 +97,20 @@ export function AchievementGrid({ achievements, showSecretAchievements }: Achiev
   const [statusFilter, setStatusFilter] = useState<"all" | "unlocked" | "locked" | "secret">("all");
   const [rarityFilter, setRarityFilter] = useState<"all" | AchievementRarity>("all");
   const [categoryFilter, setCategoryFilter] = useState<"all" | AchievementCategory>("all");
+  const [sortBy, setSortBy] = useState<"default" | "unlock-desc" | "xp-desc" | "rarity-desc">("default");
+  
   const lang = (localStorage.getItem("spotify-achievements:language") as "fr" | "en") || "fr";
   const isEn = lang === "en";
+
+  const parseUnlockDate = (dateStr?: string) => {
+    if (!dateStr) return 0;
+    const parts = dateStr.split("/");
+    if (parts.length !== 3) return 0;
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1;
+    const year = parseInt(parts[2], 10);
+    return new Date(year, month, day).getTime();
+  };
 
   const categories: { key: "all" | AchievementCategory; label: string }[] = isEn ? [
     { key: "all", label: "All" },
@@ -186,6 +198,35 @@ export function AchievementGrid({ achievements, showSecretAchievements }: Achiev
     return true;
   });
 
+  // Sort achievements
+  const sortedAchievements = [...filteredAchievements].sort((a, b) => {
+    const progA = achievements[a.id];
+    const progB = achievements[b.id];
+
+    if (sortBy === "unlock-desc") {
+      const unlockedA = progA?.unlocked || false;
+      const unlockedB = progB?.unlocked || false;
+      if (unlockedA !== unlockedB) {
+        return unlockedA ? -1 : 1; // Unlocked achievements first
+      }
+      if (unlockedA && unlockedB) {
+        return parseUnlockDate(progB.unlockDate) - parseUnlockDate(progA.unlockDate); // Most recently unlocked first
+      }
+      return 0; // Both locked, keep default
+    }
+
+    if (sortBy === "xp-desc") {
+      return b.xp - a.xp;
+    }
+
+    if (sortBy === "rarity-desc") {
+      const weights = { common: 1, uncommon: 2, rare: 3, epic: 4, legendary: 5 };
+      return weights[b.rarity] - weights[a.rarity];
+    }
+
+    return 0; // default
+  });
+
   return (
     <div className="achievement-grid-section">
       {}
@@ -221,6 +262,17 @@ export function AchievementGrid({ achievements, showSecretAchievements }: Achiev
               </option>
             ))}
           </select>
+
+          <select
+            className="filter-select"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+          >
+            <option value="default">{isEn ? "Default order" : "Ordre par défaut"}</option>
+            <option value="unlock-desc">{isEn ? "Recently unlocked" : "Récemment débloqué"}</option>
+            <option value="xp-desc">{isEn ? "Highest XP" : "Plus d'XP"}</option>
+            <option value="rarity-desc">{isEn ? "Rarest" : "Plus rare"}</option>
+          </select>
         </div>
       </div>
 
@@ -247,7 +299,7 @@ export function AchievementGrid({ achievements, showSecretAchievements }: Achiev
       </div>
 
       <div className="achievements-cards-grid">
-        {filteredAchievements.map((def) => (
+        {sortedAchievements.map((def) => (
           <AchievementCard
             key={def.id}
             definition={def}
